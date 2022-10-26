@@ -16,6 +16,7 @@ public class Pso {
     // setting args for PSO
     public static final int CORES = 28;
     public static final double PRECISION = 0.000001;
+    public static final int sameNum = 15;
     private static final int particleNum = 200;
     private static final int N = 200;
     private static final double c1i = 2.5;
@@ -111,8 +112,8 @@ public class Pso {
 
     public boolean isConverge() {
         int size = allgFitness.size();
-        if (size >= 10) {
-            for (int i = size - 2; i > size - 11; i--) {
+        if (size >= sameNum) {
+            for (int i = size - 2; i > size - 1 - sameNum; i--) {
                 if (Math.abs(allgFitness.get(i) - allgFitness.get(i + 1)) >= PRECISION) {
                     return false;
                 }
