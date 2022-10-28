@@ -1,4 +1,4 @@
-package xyz.shxiaj.pso;
+package xyz.shxiaj.clpso;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,6 +16,7 @@ class ScriptOperation {
     public static final String SCRIPTFILE = "psoem.sh";
     public static final String LOGDIR = "./runLog/%d.log";
     public static final String ENEDAT = "./part/p%d/ene.dat";
+    public static final String DIPOLEDAT = "./part/p%d/dipoles.dat";
 
     public static Process runEm(double[] variable, int id) throws IOException {
         List<String> scriptArgs = new ArrayList<>();
@@ -33,8 +34,14 @@ class ScriptOperation {
         return processBuilder.start();
     }
 
-    public static double readDat(int id) throws IOException {
+    public static double getEneDat(int id) throws IOException {
         String filePath = String.format(ENEDAT, id);
+        String datString = Files.readString(Paths.get(filePath));
+        return Double.parseDouble(datString);
+    }
+
+    public static double getDipoleDat(int id) throws IOException {
+        String filePath = String.format(DIPOLEDAT, id);
         String datString = Files.readString(Paths.get(filePath));
         return Double.parseDouble(datString);
     }

@@ -8,7 +8,7 @@ import java.util.List;
  * @Author shxiaj.github.io
  * @Date 2022/10/26 14:39
  */
-public class TestPso {
+class TestPso {
     public static void main(String[] args) {
         List<Particle> parts = new ArrayList<>();
         for (int i = 2; i < 5; i++) {

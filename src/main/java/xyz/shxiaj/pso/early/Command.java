@@ -10,7 +10,7 @@ import java.util.List;
  * @Author shxiaj.github.io
  * @Date 2022/10/24 19:22
  */
-public class Command {
+class Command {
     public static void main(String[] args) {
         Command cmd = new Command();
         // String s = cmd.callScript("./1.sh");

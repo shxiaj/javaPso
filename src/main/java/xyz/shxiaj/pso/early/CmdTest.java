@@ -8,7 +8,7 @@ import java.util.List;
  * @Author shxiaj.github.io
  * @Date 2022/10/24 20:33
  */
-public class CmdTest {
+class CmdTest {
 
     public static Process callScript(List<String> cmdArgs) throws IOException {
         ProcessBuilder processBuilder = new ProcessBuilder(cmdArgs);

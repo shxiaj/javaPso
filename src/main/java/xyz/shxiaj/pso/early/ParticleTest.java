@@ -7,7 +7,7 @@ import java.util.Random;
  * @Date 2022/10/23 15:18
  */
 
-public class ParticleTest {
+class ParticleTest {
     // setting dimension for args
     public static final int DIMENSION = 2;
     // setting V maximum

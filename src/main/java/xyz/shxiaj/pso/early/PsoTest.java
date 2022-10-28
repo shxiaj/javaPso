@@ -8,7 +8,7 @@ import java.util.Random;
  * @Author shxiaj.github.io
  * @Date 2022/10/23 15:47
  */
-public class PsoTest {
+class PsoTest {
 
     private static double[] globalBest;
     private static double globalBestValue = Double.MAX_VALUE;

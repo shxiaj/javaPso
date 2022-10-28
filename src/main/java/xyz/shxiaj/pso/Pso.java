@@ -8,7 +8,7 @@ import java.util.*;
  * @Author shxiaj.github.io
  * @Date 2022/10/26 10:03
  */
-public class Pso {
+class Pso {
 
     private double[] gX = new double[Particle.DIMENSION];
     private double gFitness;
@@ -16,8 +16,8 @@ public class Pso {
     // setting args for PSO
     public static final int CORES = 28;
     public static final double PRECISION = 0.000001;
-    public static final int sameNum = 15;
-    private static final int particleNum = 200;
+    public static final int sameNum = 50;
+    private static final int particleNum = 56;
     private static final int N = 200;
     private static final double c1i = 2.5;
     private static final double c1f = 0.5;
@@ -127,8 +127,9 @@ public class Pso {
     public void writerFile() throws IOException {
         FileWriter fw = new FileWriter(fitDat, false);
         for (int i = 0; i < allgFitness.size(); i++) {
-            String s = String.format("%5d%15.6f%10.3f%10.3f%10.3f%8.3f%8.3f", i, allgFitness.get(i),
-                    allgX.get(i)[0], allgX.get(i)[1], allgX.get(i)[2], allgX.get(i)[3], allgX.get(i)[4]);
+            // String s = String.format("%5d%15.6f%10.3f%10.3f%10.3f%8.3f%8.3f", i, allgFitness.get(i),
+            //         allgX.get(i)[0], allgX.get(i)[1], allgX.get(i)[2], allgX.get(i)[3], allgX.get(i)[4]);
+            String s = i + ": " + allgFitness.get(i) + Arrays.toString(allgX.get(i));
             fw.write(s);
             fw.write(System.getProperty("line.separator"));
         }
@@ -143,7 +144,8 @@ public class Pso {
             fw.write(p.toString());
             fw.write(System.getProperty("line.separator"));
         }
-        fw.write(String.format("step-%d: gX = %10.3f%10.3f%10.3f%8.3f%8.3f", n, gX[0], gX[1], gX[2], gX[3], gX[4]));
+        // fw.write(String.format("step-%d: gX = %10.3f%10.3f%10.3f%8.3f%8.3f", n, gX[0], gX[1], gX[2], gX[3], gX[4]));
+        fw.write(n + ": " + Arrays.toString(gX));
         fw.write(System.getProperty("line.separator"));
         fw.write(String.valueOf(gFitness));
         fw.write(System.getProperty("line.separator"));

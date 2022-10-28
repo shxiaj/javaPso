@@ -8,16 +8,16 @@ import java.util.Random;
  * @Author shxiaj.github.io
  * @Date 2022/10/26 10:02
  */
-public class Particle {
+class Particle {
     public int id;
     // public double cos;
     public double fitness;
     public Process process = null;
-    public static final int DIMENSION = 5;
+    public static final int DIMENSION = 6;
     public final double[] X = new double[DIMENSION];
     public final double[] V = new double[DIMENSION];
-    public final double[][] XLim = {{0, 359.9999}, {0, 359.9999}, {0, 359.9999}, {-0.5, 0.5}, {-0.5, 0.5}};
-    public final double[][] VLim = {{-36, 36}, {-36, 36}, {-36, 36}, {-0.05, 0.05}, {-0.05, 0.05}};
+    public final double[][] XLim = {{0, 359.9999}, {0, 359.9999}, {0, 359.9999}, {-0.5, 0.5}, {-0.5, 0.5}, {-0.05, 0.05}};
+    public final double[][] VLim = {{-36, 36}, {-36, 36}, {-36, 36}, {-0.05, 0.05}, {-0.05, 0.05}, {-0.01, 0.01}};
     public double[] pX = new double[DIMENSION];
     public double pFitness = Double.MAX_VALUE;
     // public double pCos = 0;
@@ -72,15 +72,27 @@ public class Particle {
         this.id = id;
     }
 
+    // @Override
+    // public String toString() {
+    //     return "Particle{" +
+    //             "id=" + id +
+    //             ", fitness=" + fitness +
+    //             ", X=[" + String.format("%10.3f%10.3f%10.3f%8.3f%8.3f", X[0], X[1], X[2], X[3], X[4]) +
+    //             "], V=[" + String.format("%10.3f%10.3f%10.3f%8.3f%8.3f", V[0], V[1], V[2], V[3], V[4]) +
+    //             "], pX=[" + String.format("%10.3f%10.3f%10.3f%8.3f%8.3f", pX[0], pX[1], pX[2], pX[3], pX[4]) +
+    //             "], pFitness=" + pFitness +
+    //             '}';
+    // }
+
     @Override
     public String toString() {
         return "Particle{" +
                 "id=" + id +
                 ", fitness=" + fitness +
-                ", X=[" + String.format("%10.3f%10.3f%10.3f%8.3f%8.3f", X[0],X[1],X[2],X[3],X[4]) +
-                "], V=[" + String.format("%10.3f%10.3f%10.3f%8.3f%8.3f", V[0],V[1],V[2],V[3],V[4]) +
-                "], pX=[" +String.format("%10.3f%10.3f%10.3f%8.3f%8.3f", pX[0],pX[1],pX[2],pX[3],pX[4]) +
-                "], pFitness=" + pFitness +
+                ", X=" + Arrays.toString(X) +
+                ", V=" + Arrays.toString(V) +
+                ", pX=" + Arrays.toString(pX) +
+                ", pFitness=" + pFitness +
                 '}';
     }
 }
