@@ -109,7 +109,7 @@ class Pso {
         // 运行队列, 大小为CORES
         while (i < particleNum) {
             // 队列未满, 加入队列
-            while (queue.size() < CORES) {
+            while (queue.size() < CORES && i < particleNum) {
                 Particle p = parts.get(i);
                 // 判断是否超出边界, 在边界内才进行计算; 适应度评估+1
                 // 没进入队列的粒子也不会更新gbest,stayNum
