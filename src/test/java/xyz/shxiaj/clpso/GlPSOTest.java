@@ -2,6 +2,9 @@ package xyz.shxiaj.clpso;
 
 import org.junit.Test;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 
@@ -28,6 +31,7 @@ public class GlPSOTest {
             System.out.println(p.toString());
         }
     }
+
     @Test
     public void Test3() {
         Random r = new Random();
@@ -36,13 +40,33 @@ public class GlPSOTest {
         while (f1 == f2) {
             f2 = r.nextInt(28);
         }
-        System.out.println(f1+" "+f2);
+        System.out.println(f1 + " " + f2);
     }
+
     @Test
     public void Test4() {
         Random r = new Random();
         for (int i = 0; i < 20; i++) {
             System.out.println(r.nextDouble());
+        }
+    }
+
+    @Test
+    public void Test6() {
+        File file = new File("./dat");
+        if (!file.exists()) file.mkdir();
+    }
+
+    @Test
+    public void Test7() {
+        try {
+            FileWriter fw = new FileWriter("./t.dat", true);
+            fw.write("hello");
+            fw.write("\r\n");
+            fw.write("hee");
+            fw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

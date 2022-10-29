@@ -12,11 +12,12 @@ import java.util.List;
  * @Date 2022/10/26 13:40
  */
 class ScriptOperation {
-    public static final String BASH = "bash";
-    public static final String SCRIPTFILE = "psoem.sh";
-    public static final String LOGDIR = "./runLog/%d.log";
-    public static final String ENEDAT = "./part/p%d/ene.dat";
-    public static final String DIPOLEDAT = "./part/p%d/dipoles.dat";
+    private static final String BASH = "bash";
+    private static final String SCRIPTFILE = "psoem.sh";
+    private static final String logDir = "./log";
+    private static final String logFilename = "./log/%d.log";
+    private static final String eneDatFile = "./part/p%d/ene.dat";
+    private static final String dipoleDatFile = "./part/p%d/dipoles.dat";
 
     public static Process runEm(double[] variable, int id) throws IOException {
         List<String> scriptArgs = new ArrayList<>();
@@ -26,22 +27,26 @@ class ScriptOperation {
             scriptArgs.add(String.valueOf(var));
         }
         scriptArgs.add(String.valueOf(id));
-        File logFile = new File(String.format(LOGDIR, id));
         ProcessBuilder processBuilder = new ProcessBuilder(scriptArgs);
+
+        File file = new File(logDir);
+        if (!file.exists()) file.mkdir();
+        File logFile = new File(String.format(logFilename, id));
+
         processBuilder.redirectOutput(logFile);
-        // processBuilder.redirectInput(logFile);
         processBuilder.redirectError(logFile);
+        // processBuilder.redirectInput(logFile);
         return processBuilder.start();
     }
 
     public static double getEneDat(int id) throws IOException {
-        String filePath = String.format(ENEDAT, id);
+        String filePath = String.format(eneDatFile, id);
         String datString = Files.readString(Paths.get(filePath));
         return Double.parseDouble(datString);
     }
 
     public static double getDipoleDat(int id) throws IOException {
-        String filePath = String.format(DIPOLEDAT, id);
+        String filePath = String.format(dipoleDatFile, id);
         String datString = Files.readString(Paths.get(filePath));
         return Double.parseDouble(datString);
     }

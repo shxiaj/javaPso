@@ -1,5 +1,6 @@
 package xyz.shxiaj.clpso;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
@@ -13,21 +14,21 @@ class Pso {
 
     // 当前最优位置和适应值(能量), cos
     private double[] gPositionX = new double[Particle.DIMENSION];
-    private double gFitness;
+    private double gFitness = Double.MAX_VALUE;
     private double gCos;
     public int fitSum = 0;
 
     // CPU 核心大小, 并行em队列的任务数量
     public static final int CORES = 28;
     // gmx 能量精度
-    public static final double PRECISION = 0.000001;
-    // 最大适应度评估
-    public static final int MAXFITASS = 50000;
-    public static final int sameNum = 50;
+    // public static final double PRECISION = 0.000001;
+    // 最大适应度评估; 1029已取消变量作用
+    // public static final int MAXFITASS = 10000;
+    // public static final int sameNum = 50;
     // 种群大小
     private static final int particleNum = 28;
     // 最大迭代次数
-    private static final int N = 500;
+    private static final int N = 1000;
     // 最大未进化代数
     private static final int MAXSTAY = 5;
     // 惯性权重
@@ -35,7 +36,8 @@ class Pso {
     private static final double wmin = 0.2;
     // 加速因子
     private static final double c = 1.49445;
-    // 生成的文件位置, dat文件夹需手动创建; 否则报错
+    // 生成的文件位置
+    private static final String datDir = "./dat";
     private static final String fitDat = "./dat/gene.dat";
     private static final String stepDat = "./dat/step-%d.dat";
     // 当前系统换行符
@@ -45,11 +47,11 @@ class Pso {
     // 粒子对象列表
     private final List<Particle> parts = new ArrayList<>();
     // 记录所有 最优位置, 适应值和Cos 的列表
-    private final List<double[]> allgPositionX = new ArrayList<>();
-    private final List<Double> allgFitness = new ArrayList<>();
-    private final List<Double> allCos = new ArrayList<>();
+    // private final List<double[]> allgPositionX = new ArrayList<>();
+    // private final List<Double> allgFitness = new ArrayList<>();
+    // private final List<Double> allCos = new ArrayList<>();
 
-    private final static Logger log = Logger.getGlobal();
+    // private final static Logger log = Logger.getGlobal();
 
     /**
      * initial all particle
@@ -111,13 +113,17 @@ class Pso {
             // 队列未满, 加入队列
             while (queue.size() < CORES && i < particleNum) {
                 Particle p = parts.get(i);
+                /* 1029已取消判断:
                 // 判断是否超出边界, 在边界内才进行计算; 适应度评估+1
                 // 没进入队列的粒子也不会更新gbest,stayNum
-                if (p.isInLimit()) {
-                    p.execFitness();
-                    queue.offer(p);
-                    fitSum++;
-                }
+                // if (p.isInLimit()) {
+                //     p.execFitness();
+                //     queue.offer(p);
+                //     fitSum++;
+                // }
+                 */
+                p.execFitness();
+                queue.offer(p);
                 i++;
             }
             // 队列满, 等待队首的进程结束
@@ -153,9 +159,9 @@ class Pso {
             gPositionX = parts.get(bestIndex).pPositionX.clone();
             gCos = parts.get(bestIndex).pCos;
         }
-        allgFitness.add(gFitness);
-        allgPositionX.add(gPositionX.clone());
-        allCos.add(gCos);
+        // allgFitness.add(gFitness);
+        // allgPositionX.add(gPositionX.clone());
+        // allCos.add(gCos);
     }
 
     /**
@@ -179,22 +185,37 @@ class Pso {
     }
 
     public boolean isConverge(int i) {
-        return fitSum >= MAXFITASS && i >= N;
+        return i >= N;
+        // 1029修改判断
+        // return fitSum >= MAXFITASS && i >= N;
     }
 
-    public void writerFile() throws IOException {
-        FileWriter fw = new FileWriter(fitDat, false);
-        for (int i = 0; i < allgFitness.size(); i++) {
-            String s = i
-                    + " " + allgFitness.get(i)
-                    + " " + allCos.get(i)
-                    + " " + Arrays.toString(allgPositionX.get(i));
-            fw.write(s);
-            fw.write(System.getProperty("line.separator"));
-        }
+    // 1029废弃
+    // public void writerFile() throws IOException {
+    //     FileWriter fw = new FileWriter(fitDat, false);
+    //     for (int i = 0; i < allgFitness.size(); i++) {
+    //         String s = i
+    //                 + " " + allgFitness.get(i)
+    //                 + " " + allCos.get(i)
+    //                 + " " + Arrays.toString(allgPositionX.get(i));
+    //         fw.write(s);
+    //         fw.write(System.getProperty("line.separator"));
+    //     }
+    //     fw.flush();
+    //     fw.close();
+    // }
+
+    public void writerGlobalBest(int n) throws IOException {
+        FileWriter fw = new FileWriter(fitDat, true);
+        String s = n
+                + " " + gFitness
+                + " " + gCos
+                + " " + Arrays.toString(gPositionX);
+        fw.write(s);
         fw.flush();
         fw.close();
     }
+
 
     public void writerEveryStep(int n) throws IOException {
         String datPath = String.format(stepDat, n);
@@ -211,13 +232,21 @@ class Pso {
         fw.close();
     }
 
+    public void createDir() {
+        File file = new File(datDir);
+        if (!file.exists()) file.mkdir();
+    }
+
     public void run() throws Exception {
+        // 1029创建文件夹
+        createDir();
         // 初始化粒子对象, 粒子历史最优, 全局最优; 第0次
         int i = 0;
         initialParts();
         updatePartBest();
         updateGlobalBest();
         writerEveryStep(i);
+        writerGlobalBest(i);
 
         while (!isConverge(i)) {
             i++;
@@ -225,8 +254,9 @@ class Pso {
             updatePartBest();
             updateGlobalBest();
             writerEveryStep(i);
+            writerGlobalBest(i);
         }
-        writerFile();
+        // writerFile();
     }
 
     public List<Particle> getParts() {
