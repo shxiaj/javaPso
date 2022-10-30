@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
-import java.util.logging.Logger;
 
 /**
  * @Author shxiaj.github.io
@@ -41,7 +40,7 @@ class Pso {
     private static final String fitDat = "./dat/gene.dat";
     private static final String stepDat = "./dat/step-%d.dat";
     // 当前系统换行符
-    private static final String newLine = System.getProperty("line.separator");
+    private static final String lineEnd = System.getProperty("line.separator");
 
     private final Random random = new Random();
     // 粒子对象列表
@@ -159,6 +158,7 @@ class Pso {
             gPositionX = parts.get(bestIndex).pPositionX.clone();
             gCos = parts.get(bestIndex).pCos;
         }
+        // 1029取消记录
         // allgFitness.add(gFitness);
         // allgPositionX.add(gPositionX.clone());
         // allCos.add(gCos);
@@ -212,6 +212,7 @@ class Pso {
                 + " " + gCos
                 + " " + Arrays.toString(gPositionX);
         fw.write(s);
+        fw.write(lineEnd);
         fw.flush();
         fw.close();
     }
@@ -222,12 +223,12 @@ class Pso {
         FileWriter fw = new FileWriter(datPath, false);
         for (Particle p : parts) {
             fw.write(p.toString());
-            fw.write(newLine);
+            fw.write(lineEnd);
         }
         fw.write(n + Arrays.toString(gPositionX));
-        fw.write(newLine);
+        fw.write(lineEnd);
         fw.write(String.valueOf(gFitness));
-        fw.write(newLine);
+        fw.write(lineEnd);
         fw.flush();
         fw.close();
     }
