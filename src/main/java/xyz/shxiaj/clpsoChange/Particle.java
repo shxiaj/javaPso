@@ -1,4 +1,4 @@
-package xyz.shxiaj.clpso;
+package xyz.shxiaj.clpsoChange;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -39,8 +39,10 @@ class Particle {
         // if (v > VLim[i][1]) v = VLim[i][1];
         // V[i] = v;
 
+        // 1029增加位置限制, 取消边界判断
+        double x = X[i] + V[i];
+        X[i] = Math.min(XLim[i][1], Math.max(XLim[i][0], x));
         // GLPSO 对于粒子position不做调整
-        X[i] += V[i];
     }
 
     /**
@@ -69,6 +71,7 @@ class Particle {
 
     /**
      * 判断当前位置是否超过了边界
+     * 1029取消作用
      */
     public boolean isInLimit() {
         for (int i = 0; i < DIMENSION; i++) {

@@ -1,4 +1,4 @@
-package xyz.shxiaj.clpso;
+package xyz.shxiaj.clpsoChange;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -19,8 +19,11 @@ class Pso {
 
     // CPU 核心大小, 并行em队列的任务数量
     public static final int CORES = 28;
-    // 最大适应度评估;
-    public static final int MAXFITASS = 14000;
+    // gmx 能量精度
+    // public static final double PRECISION = 0.000001;
+    // 最大适应度评估; 1029已取消变量作用
+    // public static final int MAXFITASS = 10000;
+    // public static final int sameNum = 50;
     // 种群大小
     private static final int particleNum = 28;
     // 最大迭代次数
@@ -109,13 +112,16 @@ class Pso {
             // 队列未满, 加入队列
             while (queue.size() < CORES && i < particleNum) {
                 Particle p = parts.get(i);
-                // 判断是否超出边界, 在边界内才进行计算; 适应度评估+1
-                // 没进入队列的粒子也不会更新gbest,stayNum
+                /* 1029已取消判断:
+                判断是否超出边界, 在边界内才进行计算; 适应度评估+1
+                没进入队列的粒子也不会更新gbest,stayNum
                 if (p.isInLimit()) {
                     p.execFitness();
                     queue.offer(p);
                     fitSum++;
-                }
+                }*/
+                p.execFitness();
+                queue.offer(p);
                 i++;
             }
             // 队列满, 等待队首的进程结束
@@ -153,6 +159,10 @@ class Pso {
             gPositionX = parts.get(bestIndex).pPositionX.clone();
             gCos = parts.get(bestIndex).pCos;
         }
+        // 1029取消记录
+        // allgFitness.add(gFitness);
+        // allgPositionX.add(gPositionX.clone());
+        // allCos.add(gCos);
     }
 
     /**
@@ -176,8 +186,25 @@ class Pso {
     }
 
     public boolean isConverge(int i) {
-        return fitSum >= MAXFITASS && i >= N;
+        return i >= N;
+        // 1029修改判断
+        // return fitSum >= MAXFITASS && i >= N;
     }
+
+    // 1029废弃
+    // public void writerFile() throws IOException {
+    //     FileWriter fw = new FileWriter(fitDat, false);
+    //     for (int i = 0; i < allgFitness.size(); i++) {
+    //         String s = i
+    //                 + " " + allgFitness.get(i)
+    //                 + " " + allCos.get(i)
+    //                 + " " + Arrays.toString(allgPositionX.get(i));
+    //         fw.write(s);
+    //         fw.write(System.getProperty("line.separator"));
+    //     }
+    //     fw.flush();
+    //     fw.close();
+    // }
 
     public void writerGlobalBest(int n) throws IOException {
         FileWriter fw = new FileWriter(fitDat, true);
@@ -231,6 +258,7 @@ class Pso {
             writerStepInfo(i);
             writerGlobalBest(i);
         }
+        // writerFile();
     }
 
     public List<Particle> getParts() {
